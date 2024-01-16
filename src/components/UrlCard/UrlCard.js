@@ -1,6 +1,6 @@
-import './UrlCard.css'
+import './Urlcard.css'
 
-const UrlCard = ({id, long_url, short_url, title}) => {
+const Urlcard = ({id, long_url, short_url, title}) => {
   return (
     <div className="url">
         <h3>{title}</h3>
@@ -10,4 +10,4 @@ const UrlCard = ({id, long_url, short_url, title}) => {
   )
 }
 
-export default UrlCard
+export default Urlcard

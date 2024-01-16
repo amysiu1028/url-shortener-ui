@@ -1,11 +1,11 @@
 import React from 'react';
 import './UrlContainer.css';
-import UrlCard from '../UrlCard/UrlCard';
+import Urlcard from '../Urlcard/Urlcard';
 
 const UrlContainer = ({urls}) => {
   const urlEls = urls.map(url => {
     return (
-      <UrlCard
+      <Urlcard
         id={url.id}
         key={url.id}
         long_url={url.long_url}
