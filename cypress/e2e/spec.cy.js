@@ -32,7 +32,7 @@ describe('Visit main page', () => {
 
     cy.get("[data-test='cards']").children().should('have.length', 3)
     cy.get("[data-test='cards']").last().contains('h3','Final assessment')
-    // cy.get("[data-test='cards']").last().contains('a','http://localhost:3001/useshorturl/43')
+    cy.get("[data-test='cards']").last().contains('a','http://localhost:3001/useshorturl/')
     cy.get("[data-test='cards']").last().contains('p','https://docs.google.com/forms/d/1IMNawyyHg5LqctR_sUuDhvAfrfDNeNSG5nBLoWkuFCM/viewform?edit_requested=true')
   })
 
