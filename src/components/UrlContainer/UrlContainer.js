@@ -12,7 +12,6 @@ const UrlContainer = ({urls}) => {
         short_url={url.short_url}
         title={url.title}
       />
-     
     )
   });
 
