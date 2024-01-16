@@ -9,6 +9,7 @@ function UrlForm({postNewUrl}) {
     e.preventDefault();
     if (title === '' || long_url === '') {
       setErrorMessage('All inputs must be filled out.')
+      return
     }
 
     const newUrl = {
@@ -30,7 +31,7 @@ function UrlForm({postNewUrl}) {
     <form>
       <label>Long Url:</label>
        <input
-        data-test='url-inpout'
+        data-test='url-input'
         type='text'
         placeholder='URL to Shorten...'
         name='long_url'
@@ -48,7 +49,7 @@ function UrlForm({postNewUrl}) {
         onChange={(event)=> setTitle(event.target.value)}
       />
      
-      <button type='button' onClick={e => handleSubmit(e)}>
+      <button type='button' data-test='add-button' onClick={e => handleSubmit(e)}>
         Shorten Please!
       </button>
 

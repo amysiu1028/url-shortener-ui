@@ -7,36 +7,46 @@ import { postUrls } from '../../apiCalls';
 
 function App () {
   const [urls, setUrls] = useState([]);
-  const [error, setError] = useState([]);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    getUrls() 
-    .then(urlData => {
-      setUrls(urlData.urls)
-    })
-    .catch(error => {
-      setError(error)
-    })
-  },[])
+    getUrls()
+      .then(urlData => {
+        setUrls(urlData.urls);
+      })
+      .catch(error => {
+        setError(error)
+      })
+  }, [])
 
   function postNewUrl(newUrl) {
-    postUrls()
+    postUrls(newUrl)
     .then(newUrl => {
       console.log("newUrl",newUrl)
       setUrls(urls => [...urls, newUrl])
     })
   }
 
+  function deleteCard(id) {
+    const displayRest = urls.filter((card) => card.id !== id)
+    setUrls(displayRest)
+  }
+
   return (
-    <main className="App">
-      <header>
-        <h1>URL Shortener</h1>
-        <UrlForm postNewUrl={postNewUrl}/>
-      </header>
+    <div>
+      {error ? (
+        <h2 data-test="error">{`${error}`}</h2>
+      ) : (
+        <main className="App">
+          <header>
+            <h1>URL Shortener</h1>
+            <UrlForm postNewUrl={postNewUrl} />
+          </header>
+          <UrlContainer urls={urls} deleteCard={deleteCard} />
+        </main>
+      )}
+    </div>
+  )
 
-      <UrlContainer urls={urls}/>
-    </main>
-  );
 }
-
 export default App;

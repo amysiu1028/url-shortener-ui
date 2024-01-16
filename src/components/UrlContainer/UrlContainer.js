@@ -2,7 +2,7 @@ import React from 'react';
 import './UrlContainer.css';
 import Urlcard from '../Urlcard/Urlcard';
 
-const UrlContainer = ({urls}) => {
+const UrlContainer = ({urls, deleteCard}) => {
   const urlEls = urls.map(url => {
     return (
       <Urlcard
@@ -11,12 +11,13 @@ const UrlContainer = ({urls}) => {
         long_url={url.long_url}
         short_url={url.short_url}
         title={url.title}
+        deleteCard={deleteCard}
       />
     )
   });
 
   return (
-    <section>
+    <section data-test='cards'>
       { urlEls.length ? urlEls : <p>No urls yet! Find some to shorten!</p> }
     </section>
   )
