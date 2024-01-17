@@ -21,21 +21,6 @@ describe('Visit main page', () => {
     cy.get("[data-test='cards']").last().contains('p','https://www.notion.so/Ideabox-tes-60d43b97ebc3427cbe52e2cc2cfd8084')
   })
 
-  it('should be able to view and fill out form and add another card with title, long url, and short url displayed', () => {
-    cy.get("[data-test='url-input']").should('be.visible').should('have.attr','placeholder','URL to Shorten...')
-    cy.get("[data-test='title-input']").should('be.visible').should('have.attr','placeholder','Title...')
-
-    cy.get("[data-test='cards']").children().should('have.length', 2)
-    cy.get("[data-test='url-input']").type('https://docs.google.com/forms/d/1IMNawyyHg5LqctR_sUuDhvAfrfDNeNSG5nBLoWkuFCM/viewform?edit_requested=true').should('have.value','https://docs.google.com/forms/d/1IMNawyyHg5LqctR_sUuDhvAfrfDNeNSG5nBLoWkuFCM/viewform?edit_requested=true')
-    cy.get("[data-test='title-input']").type('Final assessment').should('have.value','Final assessment')
-    cy.get("[data-test='add-button']").click();  
-
-    cy.get("[data-test='cards']").children().should('have.length', 3)
-    cy.get("[data-test='cards']").last().contains('h3','Final assessment')
-    cy.get("[data-test='cards']").last().contains('a','http://localhost:3001/useshorturl/')
-    cy.get("[data-test='cards']").last().contains('p','https://docs.google.com/forms/d/1IMNawyyHg5LqctR_sUuDhvAfrfDNeNSG5nBLoWkuFCM/viewform?edit_requested=true')
-  })
-
   it('should display error message when not all input fields are complete', () => {
     cy.get("[data-test='cards']").children().should('have.length', 2)
     cy.get("[data-test='url-input']").should('have.value','')
@@ -53,3 +38,43 @@ describe('Visit main page', () => {
     cy.get("[data-test='cards']").last().contains('p','https://images.unsplash.com/photo-1531898418865-480b7090470f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80')
   })
 })
+
+describe('Post New URL', () => {
+  beforeEach(() => {
+    cy.intercept("GET", "http://localhost:3001/api/v1/urls", {
+      fixture: 'example'
+    }).as("getUrls");
+
+    cy.intercept("POST", "http://localhost:3001/api/v1/urls", {
+      statusCode: 201,
+      body: {
+        id: 3,
+        long_url: "https://www.notion.so/Ideabox-tes-60d43b97ebc3427cbe52e2cc2cfd8084",
+        short_url: "http://localhost:3001/useshorturl/3",
+        title: "Ideas"
+      }
+    }).as("postUrl");
+
+    cy.visit('http://localhost:3000/');
+    cy.wait('@getUrls');
+  });
+
+  it('should allow a user to add url and post it', () => {
+    cy.get("[data-test='url-input']").should('be.visible').should('have.attr', 'placeholder', 'URL to Shorten...');
+    cy.get("[data-test='title-input']").should('be.visible').should('have.attr', 'placeholder', 'Title...');
+
+    cy.get("[data-test='cards']").children().should('have.length', 2);
+
+    cy.get("[data-test='url-input']").type('https://docs.google.com/forms/d/1IMNawyyHg5LqctR_sUuDhvAfrfDNeNSG5nBLoWkuFCM/viewform?edit_requested=true').should('have.value', 'https://docs.google.com/forms/d/1IMNawyyHg5LqctR_sUuDhvAfrfDNeNSG5nBLoWkuFCM/viewform?edit_requested=true');
+    cy.get("[data-test='title-input']").type('Final assessment').should('have.value', 'Final assessment');
+    cy.get("[data-test='add-button']").click();
+    cy.log('Clicked the add button');
+
+    cy.wait("@postUrl");
+
+    cy.get("[data-test='cards']").children().should('have.length', 3);
+    cy.get("[data-test='cards']").last().contains('h3', 'Ideas');
+    cy.get("[data-test='cards']").last().contains('a', 'http://localhost:3001/useshorturl/3');
+    cy.get("[data-test='cards']").last().contains('p', 'https://www.notion.so/Ideabox-tes-60d43b97ebc3427cbe52e2cc2cfd8084');
+  });
+});
